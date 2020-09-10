@@ -1,10 +1,10 @@
 ﻿using System;
 namespace AsyncInn.Models
 {
-    public class Amenities
+    public class Amenity
     {
-        public Amenities()
-        {
-        }
+        public int Id { get; set; }
+
+        public string Name { get; set; }
     }
 }
