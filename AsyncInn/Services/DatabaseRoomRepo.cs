@@ -17,11 +17,31 @@ namespace AsyncInn.Services
             _context = context;
         }
 
+        public async Task AddAmenityToRoom(int roomId, int amenityId)
+        {
+            var roomAmenity = new RoomAmenity
+            {
+                AmenityId = amenityId,
+                RoomId = roomId,
+            };
+
+            _context.RoomAmenities.Add(roomAmenity);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Room> CreateOneRoom(Room room)
         {
             _context.Rooms.Add(room);
             await _context.SaveChangesAsync();
             return room;
+        }
+
+        public async Task DeleteAmenityFromRoom(int roomId, int amenityId)
+        {
+            var roomAmenity = await _context.RoomAmenities.FindAsync(roomId, amenityId);
+
+            _context.RoomAmenities.Remove(roomAmenity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Room> DeleteOneRoomById(int id)
@@ -39,14 +59,20 @@ namespace AsyncInn.Services
             return room;
         }
 
-        public async Task<IEnumerable<Room>> GetAllRooms()
+        public IEnumerable<Room> GetAllRooms()
         {
-            return await _context.Rooms.ToListAsync();
+            //return await _context.Rooms.ToListAsync();
+            return _context.Rooms
+                .Include(r => r.RoomAmenities)
+                .ToList();
         }
 
-        public async Task<Room> GetOneRoom(int id)
+        public  Room GetOneRoom(int id)
         {
-            return await _context.Rooms.FindAsync(id);
+            //return await _context.Rooms.FindAsync(id);
+            return _context.Rooms
+                .Include(r => r.RoomAmenities)
+                .FirstOrDefault(r => r.Id == id);
         }
 
         public async Task<bool> UpdateAsync(Room room)

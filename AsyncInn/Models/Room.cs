@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace AsyncInn.Models
@@ -19,5 +20,7 @@ namespace AsyncInn.Models
             OneBedroom,
             TwoBedroom
         }
+
+        public List<RoomAmenity> RoomAmenities { get; set; }
     }
 }
