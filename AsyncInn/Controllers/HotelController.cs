@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AsyncInn.Data;
 using AsyncInn.Models;
+using AsyncInn.Services;
 
 namespace AsyncInn.Controllers
 {
@@ -14,18 +15,20 @@ namespace AsyncInn.Controllers
     [ApiController]
     public class HotelController : ControllerBase
     {
+        private readonly IHotelRepo repository;
         private readonly HotelDbContext _context;
 
-        public HotelController(HotelDbContext context)
+        public HotelController(IHotelRepo repository, HotelDbContext context)
         {
+            this.repository = repository;
             _context = context;
         }
 
         // GET: api/Hotel
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
+        public async Task<IEnumerable<Hotel>> GetHotels()
         {
-            return await _context.Hotels.ToListAsync();
+            return await repository.GetAllHotels();
         }
 
         // GET: api/Hotel/5
@@ -53,22 +56,11 @@ namespace AsyncInn.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(hotel).State = EntityState.Modified;
+            bool didUpdate = await repository.UpdateAsync(hotel);
 
-            try
+            if(didUpdate == false)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!HotelExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
             return NoContent();
