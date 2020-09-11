@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AsyncInn.Models
 {
-    public class RoomAmenities
+    public class RoomAmenity
     {
-        public long AmenityId { get; set; }
+        public int AmenityId { get; set; }
 
-        public long RoomId { get; set; }
+        public int RoomId { get; set; }
 
         [ForeignKey(nameof(AmenityId))]
         public Amenity Amenity { get; set; }
