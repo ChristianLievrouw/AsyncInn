@@ -1,10 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using AsyncInn.Models;
+
 namespace AsyncInn.Services
 {
-    public class IAmenityRepo
+    public interface IAmenityRepo
     {
-        public IAmenityRepo()
-        {
-        }
+        Task<IEnumerable<Amenity>> GetAllAmenities();
+
+        Task<Amenity> GetOneAmenity(int id);
+
+        Task<Amenity> CreateOneAmenity(Amenity amenity);
+
+        Task<bool> UpdateAsync(Amenity amenity);
+
+        Task<Amenity> DeleteOneAmenityById(int id);
     }
 }
