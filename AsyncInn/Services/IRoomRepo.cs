@@ -16,5 +16,9 @@ namespace AsyncInn.Services
         Task<bool> UpdateAsync(Room room);
 
         Task<Room> DeleteOneRoomById(int id);
+
+        Task<Room> AddAmenityToRoom(int roomId, int amenityId);
+
+        Task<Room> DeleteAmenityFromRoom(int roomId, int amenityId);
     }
 }

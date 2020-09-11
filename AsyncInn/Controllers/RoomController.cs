@@ -109,5 +109,17 @@ namespace AsyncInn.Controllers
         {
             return _context.Rooms.Any(e => e.Id == id);
         }
+
+        [HttpPost("{roomId}/Amenity/{amenityId}")]
+        public async Task<ActionResult<Amenity>> AddAmenityToRoom()
+        {
+            return;
+        }
+
+        [HttpDelete("{roomId}/Amenity/{amenityId}")]
+        public async Task<ActionResult<Amenity>> DeleteAmenityFromARoom()
+        {
+
+        }
     }
 }

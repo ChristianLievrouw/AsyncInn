@@ -17,11 +17,21 @@ namespace AsyncInn.Services
             _context = context;
         }
 
+        public Task<Room> AddAmenityToRoom(int roomId, int amenityId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Room> CreateOneRoom(Room room)
         {
             _context.Rooms.Add(room);
             await _context.SaveChangesAsync();
             return room;
+        }
+
+        public Task<Room> DeleteAmenityFromRoom(int roomId, int amenityId)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<Room> DeleteOneRoomById(int id)
