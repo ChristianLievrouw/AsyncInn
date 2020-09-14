@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace AsyncInn.Models
@@ -22,5 +23,7 @@ namespace AsyncInn.Models
         public string Country { get; set; }
 
         public int Phone { get; set; }
+
+        public List<HotelRoom> HotelRooms { get; set; }
     }
 }
