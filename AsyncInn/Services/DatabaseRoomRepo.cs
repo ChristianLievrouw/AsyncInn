@@ -59,20 +59,22 @@ namespace AsyncInn.Services
             return room;
         }
 
-        public IEnumerable<Room> GetAllRooms()
+        public async Task<IEnumerable<Room>> GetAllRooms()
         {
             //return await _context.Rooms.ToListAsync();
-            return _context.Rooms
+            return await _context.Rooms
                 .Include(r => r.RoomAmenities)
-                .ToList();
+                .ThenInclude(a => a.Amenity)
+                .ToListAsync();
         }
 
-        public  Room GetOneRoom(int id)
+        public async Task<Room> GetOneRoom(int id)
         {
             //return await _context.Rooms.FindAsync(id);
-            return _context.Rooms
+            return await _context.Rooms
                 .Include(r => r.RoomAmenities)
-                .FirstOrDefault(r => r.Id == id);
+                .ThenInclude(a => a.Amenity)
+                .FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task<bool> UpdateAsync(Room room)
