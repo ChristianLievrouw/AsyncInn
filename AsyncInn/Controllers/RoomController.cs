@@ -28,14 +28,15 @@ namespace AsyncInn.Controllers
         [HttpGet]
         public async Task<IEnumerable<Room>> GetRooms()
         {
-            return await _context.Rooms.ToListAsync();
+            return await repository.GetAllRooms();
         }
 
         // GET: api/Room/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Room>> GetRoom(int id)
         {
-            var room = await _context.Rooms.FindAsync(id);
+
+            var room = await repository.GetOneRoom(id);
 
             if (room == null)
             {

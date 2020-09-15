@@ -7,9 +7,9 @@ namespace AsyncInn.Services
 {
     public interface IRoomRepo
     {
-        IEnumerable<Room> GetAllRooms();
+        Task<IEnumerable<Room>> GetAllRooms();
 
-        Room GetOneRoom(int id);
+        Task<Room> GetOneRoom(int id);
 
         Task<Room> CreateOneRoom(Room room);
 

@@ -28,6 +28,13 @@ namespace AsyncInn
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers()
+                // No infinite reference looping here.
+                .AddNewtonsoftJson(OptionsBuilderConfigurationExtensions =>
+                {
+                    OptionsBuilderConfigurationExtensions.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
+
             services.AddMvc();
             services.AddControllers();
             // step 3 Register our DbContext
@@ -40,6 +47,7 @@ namespace AsyncInn
             services.AddTransient<IHotelRepo, DatabaseHotelRepo>();
             services.AddTransient<IRoomRepo, DatabaseRoomRepo>();
             services.AddTransient<IAmenityRepo, DatabaseAmenityRepo>();
+            services.AddTransient<IHotelRoom, DatabaseHotelRoomRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

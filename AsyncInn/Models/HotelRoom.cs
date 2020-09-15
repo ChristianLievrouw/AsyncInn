@@ -12,6 +12,7 @@ namespace AsyncInn.Models
      
         public int RoomId { get; set; }
 
+        [Column(TypeName = "money")]
         public decimal Rate { get; set; }
 
         public bool PetFriendly { get; set; }

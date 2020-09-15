@@ -7,14 +7,14 @@ namespace AsyncInn.Services
 {
     public interface IHotelRoom
     {
-        Task<IEnumerable<Hotel>> GetAllHotelRooms();
+        Task<IEnumerable<HotelRoom>> GetAllHotelRooms();
 
-        Task<Hotel> GetOneHotelRoom(int id);
+        Task<HotelRoom> GetOneHotelRoom(int id);
 
-        Task<Hotel> CreateHotelRoom(Hotel hotel);
+        Task<HotelRoom> CreateHotelRoom(HotelRoom hotelRoom);
 
-        Task<bool> UpdateHotelRoomAsync(Hotel hotel);
+        Task<bool> UpdateHotelRoomAsync(HotelRoom hotelRoom);
 
-        Task<Hotel> DeleteOneHotelRoomById(int id);
+        Task<HotelRoom> DeleteOneHotelRoomById(int id);
     }
 }
