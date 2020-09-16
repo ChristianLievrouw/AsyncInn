@@ -39,15 +39,15 @@ namespace AsyncInn.Services
             return amenity;
         }
 
-        public Task<IEnumerable<Amenity>> GetAllAmenities()
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<IEnumerable<Amenity>> GetAllHotels()
+        public async Task<IEnumerable<Amenity>> GetAllAmenities()
         {
             return await _context.Amenitites.ToListAsync();
         }
+
+        //public async Task<IEnumerable<Amenity>> GetAllHotels()
+        //{
+        //    return await _context.Amenitites.ToListAsync();
+        //}
 
         public async Task<Amenity> GetOneAmenity(int id)
         {
