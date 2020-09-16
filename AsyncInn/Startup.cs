@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using AsyncInn.Services;
+using AsyncInn.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace AsyncInn
 {
@@ -43,6 +45,15 @@ namespace AsyncInn
                 string connectionString = Configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(connectionString);
             });
+
+            services
+                .AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            })
+                .AddEntityFrameworkStores<HotelDbContext>();
+
+            services.AddTransient<IUserService, IdentityUserService>();
 
             services.AddTransient<IHotelRepo, DatabaseHotelRepo>();
             services.AddTransient<IRoomRepo, DatabaseRoomRepo>();
