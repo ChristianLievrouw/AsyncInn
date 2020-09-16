@@ -1,7 +1,7 @@
 ﻿using System;
 namespace AsyncInn.Services
 {
-    public class IdentityUserService
+    public class IdentityUserService : IUserService
     {
        
     }
