@@ -1,11 +1,12 @@
 ﻿using System;
 using AsyncInn.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using static AsyncInn.Models.Room;
 
 namespace AsyncInn.Data
 {
-    public class HotelDbContext : DbContext
+    public class HotelDbContext : IdentityDbContext<ApplicationUser>
     {
         public HotelDbContext(DbContextOptions options)
             : base(options)
@@ -14,7 +15,9 @@ namespace AsyncInn.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //base.OnModelCreating(modelBuilder);
+            // We have to have this becuase IdentityDbContext uses it
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Hotel>()
                 .HasData(
                     new Hotel { Id = 1, Name = "Async Inn", Address = "123 Sync Street", City = "Des Moines", State = "Iowa", Phone = 515-555-1234 },
