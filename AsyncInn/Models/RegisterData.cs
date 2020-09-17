@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AsyncInn.Models
 {
+
     public class RegisterData
     {
         [Required]

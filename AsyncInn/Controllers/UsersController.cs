@@ -20,9 +20,28 @@ namespace AsyncInn.Controllers
             this.userService = userService;
         }
 
-        public async Task<ActionResult<ApplicationUser>> Register(RegisterData data)
+        [HttpPost("Register")]
+        public async Task<ActionResult<UserDto>> Register(RegisterData data)
         {
-            ApplicationUser user = await userService.Register(data);
+            UserDto user = await userService.Register(data, this.ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ValidationProblemDetails(ModelState));
+
+            }
+            return user;
+        }
+
+        [HttpPost("Login")]
+        public async Task<ActionResult<UserDto>> Login(LoginData data)
+        {
+            var user = await userService.Authenticate(data.Username, data.Password);
+
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
             return user;
         }
     }
