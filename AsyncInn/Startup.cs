@@ -20,13 +20,13 @@ namespace AsyncInn
     public class Startup
     {
         //1
-            public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }
         // 2
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-        
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
@@ -55,6 +55,7 @@ namespace AsyncInn
                 .AddEntityFrameworkStores<HotelDbContext>();
 
             services.AddTransient<IUserService, IdentityUserService>();
+            services.AddScoped<JwtTokenService>();
 
             services.AddTransient<IHotelRepo, DatabaseHotelRepo>();
             services.AddTransient<IRoomRepo, DatabaseRoomRepo>();
@@ -65,7 +66,7 @@ namespace AsyncInn
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Hotel Info", Version = "v1" });
             });
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
