@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using AsyncInn.Services;
 using AsyncInn.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Models;
 
 namespace AsyncInn
 {
@@ -59,6 +60,12 @@ namespace AsyncInn
             services.AddTransient<IRoomRepo, DatabaseRoomRepo>();
             services.AddTransient<IAmenityRepo, DatabaseAmenityRepo>();
             services.AddTransient<IHotelRoom, DatabaseHotelRoomRepo>();
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Hotel Info", Version = "v1" });
+            });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +75,17 @@ namespace AsyncInn
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger(options =>
+            {
+                options.RouteTemplate = "/api/{documentName}/swagger.json";
+            });
+
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/api/v1/swagger.json", "Hotel Info");
+                options.RoutePrefix = "";
+            });
 
             app.UseRouting();
 
