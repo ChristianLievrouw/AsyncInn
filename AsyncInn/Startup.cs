@@ -14,6 +14,7 @@ using AsyncInn.Services;
 using AsyncInn.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace AsyncInn
 {
@@ -56,6 +57,16 @@ namespace AsyncInn
 
             services.AddTransient<IUserService, IdentityUserService>();
             services.AddScoped<JwtTokenService>();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = JwtTokenService.GetValidationParameters(Configuration);
+                });
 
             services.AddTransient<IHotelRepo, DatabaseHotelRepo>();
             services.AddTransient<IRoomRepo, DatabaseRoomRepo>();

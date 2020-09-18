@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Text;
 using AsyncInn.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AsyncInn.Services
 {
@@ -14,6 +16,26 @@ namespace AsyncInn.Services
         {
             this.configuration = configuration;
             this.signInManager = signInManager;
+        }
+
+        public static TokenValidationParameters GetValidationParameters(IConfiguration configuration)
+        {
+            return new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = GetSecurityKey(configuration),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+            };
+        }
+
+        private static SecurityKey GetSecurityKey(IConfiguration configuration)
+        {
+            var secret = configuration["JWT:Secret"];
+            if (secret == null) throw new InvalidOperationException("JWT:Secret is missing");
+
+            var securityBytes = Encoding.UTF8.GetBytes(secret);
+            return new SymmetricSecurityKey(securityBytes);
         }
     }
 }
