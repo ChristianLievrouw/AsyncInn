@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace AsyncInn.Models
@@ -16,5 +17,7 @@ namespace AsyncInn.Models
         public string Email { get; set; }
 
         public string Phonenumber { get; set; }
+
+        public List<string> Roles { get; set; }
     }
 }

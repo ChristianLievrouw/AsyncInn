@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using AsyncInn.Models;
@@ -28,7 +29,9 @@ namespace AsyncInn.Services
                 {
                     Id = user.Id,
                     Username = user.UserName,
-                    Token = await tokenService.GetToken(user, TimeSpan.FromMinutes(30))
+                    Token = await tokenService.GetToken(user, TimeSpan.FromMinutes(30)),
+                    Roles = await userManager.GetRolesAsync(user),
+
                 };
             }
 
@@ -42,6 +45,8 @@ namespace AsyncInn.Services
             {
                 Id = user.Id,
                 Username = user.UserName,
+                Roles = await userManager.GetRolesAsync(user),
+
             };
         }
 
@@ -57,11 +62,21 @@ namespace AsyncInn.Services
             var result = await userManager.CreateAsync(user, data.Password);
             if (result.Succeeded)
             {
+                if(data.Roles?.Any() == true)
+                {
+                    await userManager.AddToRolesAsync(user, data.Roles);
+                }
+                else
+                {
+                    //await userManager.AddToRolesAsync(user, "student");
+                }
+
                 return new UserDto
                 {
                     Id = user.Id,
                     Username = user.UserName,
-                    Token = await tokenService.GetToken(user, TimeSpan.FromMinutes(30))
+                    Token = await tokenService.GetToken(user, TimeSpan.FromMinutes(30)),
+                    Roles = await userManager.GetRolesAsync(user),
                 };
             }
 

@@ -75,6 +75,12 @@ namespace AsyncInn
                 {
                     options.TokenValidationParameters = JwtTokenService.GetValidationParameters(Configuration);
                 });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("create", policy => policy.RequireClaim("permission", "create"));
+                options.AddPolicy("update", policy => policy.RequireClaim("permission", "update"));
+                options.AddPolicy("delete", policy => policy.RequireClaim("permission", "delete"));
+            });
 
             services.AddTransient<IHotelRepo, DatabaseHotelRepo>();
             services.AddTransient<IRoomRepo, DatabaseRoomRepo>();
