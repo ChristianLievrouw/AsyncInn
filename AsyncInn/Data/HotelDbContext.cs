@@ -3,6 +3,7 @@ using AsyncInn.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using static AsyncInn.Models.Room;
+using Microsoft.AspNetCore.Identity;
 
 namespace AsyncInn.Data
 {
@@ -52,6 +53,22 @@ namespace AsyncInn.Data
                     hotelRoom.HotelId,
                     hotelRoom.RoomNumber
                 });
+
+            SeedRole(modelBuilder, "Administrator");
+            SeedRole(modelBuilder, "Editor");
+        }
+
+        private void SeedRole(ModelBuilder modelBuilder, string roleName)
+        {
+            var role = new IdentityRole
+            {
+                Id = roleName.ToLower(),
+                Name = roleName,
+                NormalizedName = roleName.ToUpper(),
+                ConcurrencyStamp = Guid.Empty.ToString(),
+            };
+            modelBuilder.Entity<IdentityRole>()
+                .HasData(role);
         }
 
         public DbSet<Hotel> Hotels { get; set; }

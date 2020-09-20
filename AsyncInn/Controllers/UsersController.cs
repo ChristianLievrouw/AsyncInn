@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AsyncInn.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -21,6 +22,7 @@ namespace AsyncInn.Controllers
             this.userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<ActionResult<UserDto>> Register(RegisterData data)
         {
@@ -33,6 +35,7 @@ namespace AsyncInn.Controllers
             return user;
         }
 
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<ActionResult<UserDto>> Login(LoginData data)
         {
@@ -46,7 +49,6 @@ namespace AsyncInn.Controllers
             return user;
         }
 
-        [Authorize]
         [HttpGet("Self")]
         public async Task<ActionResult<UserDto>> Self()
         {
