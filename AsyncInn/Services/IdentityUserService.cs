@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AsyncInn.Models;
 using Microsoft.AspNetCore.Identity;
@@ -27,10 +28,21 @@ namespace AsyncInn.Services
                 {
                     Id = user.Id,
                     Username = user.UserName,
+                    Token = await tokenService.GetToken(user, TimeSpan.FromMinutes(30))
                 };
             }
 
             return null;
+        }
+
+        public async Task<UserDto> GetUser(ClaimsPrincipal principal)
+        {
+            var user =  await userManager.GetUserAsync(principal);
+            return new UserDto
+            {
+                Id = user.Id,
+                Username = user.UserName,
+            };
         }
 
         public async Task<UserDto> Register(RegisterData data, ModelStateDictionary modelState)
@@ -49,6 +61,7 @@ namespace AsyncInn.Services
                 {
                     Id = user.Id,
                     Username = user.UserName,
+                    Token = await tokenService.GetToken(user, TimeSpan.FromMinutes(30))
                 };
             }
 

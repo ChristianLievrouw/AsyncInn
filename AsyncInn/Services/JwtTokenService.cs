@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using System.Threading.Tasks;
 using AsyncInn.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,20 @@ namespace AsyncInn.Services
             this.signInManager = signInManager;
         }
 
+        public async Task<string> GetToken(ApplicationUser user, TimeSpan expireIn)
+        {
+            var principal = await signInManager.CreateUserPrincipalAsync(user);
+            if (principal == null) return null;
+            var signinkey = GetSecurityKey(configuration);
+            var token = new JwtSecurityToken(
+                expires: DateTime.UtcNow + expireIn,
+                signingCredentials: new SigningCredentials(signinkey, SecurityAlgorithms.HmacSha256),
+                claims: principal.Claims
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
         public static TokenValidationParameters GetValidationParameters(IConfiguration configuration)
         {
             return new TokenValidationParameters
@@ -26,6 +42,7 @@ namespace AsyncInn.Services
                 IssuerSigningKey = GetSecurityKey(configuration),
                 ValidateIssuer = false,
                 ValidateAudience = false,
+                ValidateLifetime = true,
             };
         }
 
