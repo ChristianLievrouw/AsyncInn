@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using AsyncInn.Models;
 using AsyncInn.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AsyncInn.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -20,6 +22,7 @@ namespace AsyncInn.Controllers
             this.userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("Register")]
         public async Task<ActionResult<UserDto>> Register(RegisterData data)
         {
@@ -32,6 +35,7 @@ namespace AsyncInn.Controllers
             return user;
         }
 
+        [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<ActionResult<UserDto>> Login(LoginData data)
         {
@@ -43,6 +47,12 @@ namespace AsyncInn.Controllers
             }
 
             return user;
+        }
+
+        [HttpGet("Self")]
+        public async Task<ActionResult<UserDto>> Self()
+        {
+            return await userService.GetUser(this.User);
         }
     }
 }

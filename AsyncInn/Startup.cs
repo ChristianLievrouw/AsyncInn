@@ -15,6 +15,9 @@ using AsyncInn.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace AsyncInn
 {
@@ -32,6 +35,11 @@ namespace AsyncInn
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(new AuthorizeFilter());
+            });
+
             services.AddControllers()
                 // No infinite reference looping here.
                 .AddNewtonsoftJson(OptionsBuilderConfigurationExtensions =>
@@ -67,6 +75,12 @@ namespace AsyncInn
                 {
                     options.TokenValidationParameters = JwtTokenService.GetValidationParameters(Configuration);
                 });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("create", policy => policy.RequireClaim("permission", "create"));
+                options.AddPolicy("update", policy => policy.RequireClaim("permission", "update"));
+                options.AddPolicy("delete", policy => policy.RequireClaim("permission", "delete"));
+            });
 
             services.AddTransient<IHotelRepo, DatabaseHotelRepo>();
             services.AddTransient<IRoomRepo, DatabaseRoomRepo>();
@@ -75,7 +89,16 @@ namespace AsyncInn
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Hotel Info", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Hotel Info", Version = "v1"
+                });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                options.OperationFilter<AuthenticationRequrementOperationFilter>();
             });
 
         }
@@ -100,6 +123,8 @@ namespace AsyncInn
             });
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -109,6 +134,32 @@ namespace AsyncInn
                     await context.Response.WriteAsync("Hello World!");
                 });
             });
+        }
+
+        private class AuthenticationRequrementOperationFilter : IOperationFilter
+        {
+            public void Apply(OpenApiOperation operation, OperationFilterContext context)
+            {
+                var hasAnonymous = context.ApiDescription.CustomAttributes().OfType<AllowAnonymousAttribute>().Any();
+                if (hasAnonymous)
+                    return;
+
+                operation.Security ??= new List<OpenApiSecurityRequirement>();
+
+                var scheme = new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Id = "Bearer",
+                        Type = ReferenceType.SecurityScheme,
+                    },
+                };
+
+                operation.Security.Add(new OpenApiSecurityRequirement
+                {
+                    [scheme] = new List<string>()
+                });
+            }
         }
     }
 }

@@ -4,14 +4,16 @@ using AsyncInn.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AsyncInn.Migrations
 {
     [DbContext(typeof(HotelDbContext))]
-    partial class HotelDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200920212809_AddSeedRoles")]
+    partial class AddSeedRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -322,43 +324,6 @@ namespace AsyncInn.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ClaimType = "permissions",
-                            ClaimValue = "ctreate",
-                            RoleId = "administrator"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ClaimType = "permissions",
-                            ClaimValue = "update",
-                            RoleId = "administrator"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ClaimType = "permissions",
-                            ClaimValue = "delete",
-                            RoleId = "administrator"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ClaimType = "permissions",
-                            ClaimValue = "create",
-                            RoleId = "editor"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ClaimType = "permissions",
-                            ClaimValue = "update",
-                            RoleId = "editor"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>

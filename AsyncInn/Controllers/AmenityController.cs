@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using AsyncInn.Data;
 using AsyncInn.Models;
 using AsyncInn.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AsyncInn.Controllers
 {
@@ -91,6 +92,7 @@ namespace AsyncInn.Controllers
 
         // DELETE: api/Amenity/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "delete")]
         public async Task<ActionResult<Amenity>> DeleteAmenity(int id)
         {
             var amenity = await _context.Amenitites.FindAsync(id);
